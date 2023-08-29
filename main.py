@@ -51,6 +51,11 @@ class CreditCard:
         else:
             return False
 
+class SecureCreditCard(CreditCard):
+    def authenticate(self, given_password):
+        password = 'example'
+        return password == given_password
+
 
 print(df)
 
@@ -62,12 +67,16 @@ if hotel.available():
     expiration = input("Enter expiration date: ")
     holder = input("Enter card holder: ")
     ccv = input("Enter ccv code: ")
-    credit_card = CreditCard(card_number, expiration, holder, ccv)
+    credit_card = SecureCreditCard(card_number, expiration, holder, ccv)
     if credit_card.validate():
-        hotel.book()
-        name = input("Enter your name: ")
-        ticket = ReservationTicket(name, hotel)
-        print(ticket.reservation())
+        password = input('Enter payment password: ')
+        if credit_card.authenticate(given_password=password):
+            hotel.book()
+            name = input("Enter your name: ")
+            ticket = ReservationTicket(name, hotel)
+            print(ticket.reservation())
+        else:
+            print('Credit card authentication failed.')
     else:
         print('Sorry, your card is invalid.')
 else:
